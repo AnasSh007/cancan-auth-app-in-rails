@@ -1,0 +1,47 @@
+<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+  <h1>Forum</h1>
+  <%= link_to 'New Question', new_question_path%>
+</nav>
+
+<%= flash[:alert] %>
+
+<br>
+<% @questions.each do |question| %>
+  <div class="list-group">
+    <span class="list-group-item list-group-item-primary flex-column align-items-start">
+    <h3><%= question.content %></h3>
+    <p class="blockquote-footer"><%= time_ago_in_words(question.created_at) %> ago by
+      <% if current_user == question.user %>
+        <span>me</span>
+      <% else %>
+        <%= question.user.email%>
+      <% end %>
+    </p>
+      <% if can? :update, question %>
+      <%= button_to "Edit", edit_question_path(question), :class=>'btn btn-outline-info btn-sm'%>
+    <% end %>
+      <% if can? :destroy, question %>
+      <%= button_to "Destroy", question, method: :delete,
+                    data:{confirm: 'Are you sure want to delete this?',
+                    turbo: "false"},
+                    :class=>'btn btn-outline-danger btn-sm'
+      %>
+    <% end %>
+    </span>
+
+    <% if question.answers.any? %>
+      <div class="list-group-item list-group-item-action list-group-item-secondary">
+        <h4>Answers</h4>
+      </div>
+      <%= render question.answers %>
+    <% end %>
+    <div class="list-group-item list-group-item-action list-group-item-secondary">
+      <p class="text-dark">Add Answer</p>
+      <%= form_for([question, question.answers.build]) do |f| %>
+        <%= f.text_field :content %>
+        <%= submit_tag "Add" , :class=>"btn btn-outline-success btn-sm"%>
+      <% end %>
+    </div>
+  </div>
+  <br>
+<% end %>

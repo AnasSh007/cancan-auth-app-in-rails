@@ -1,0 +1,13 @@
+<span class="list-group-item list-group-item-action list-group-item-secondary">
+  <span class="text-dark"> <%= answer.content %> </span>
+  <span class="blockquote-footer"> commented by
+    <% if current_user == answer.user %>
+      <span>me</span>
+    <% else %>
+      <%= answer.user.email %>
+    <% end %>
+  </span>
+  <% if can? :destroy, answer %>
+    <%= button_to "Delete", question_answer_path(answer.question, answer), method: :delete, data: { turbo: "false" }, :class=>"btn btn-outline-danger btn-sm"%>
+  <% end %>
+</span>
