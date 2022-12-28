@@ -19,7 +19,9 @@ class QuestionsController < ApplicationController
 
   # GET /questions/1/edit
   def edit
+    # @question = Question.find(params[:id])
     authorize! :update, @question
+    p '\n\n\n question :id is === ', @question, '\n\n\n'
   end
 
   # POST /questions or /questions.json
